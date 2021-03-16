@@ -15,12 +15,13 @@ class App extends Component {
     otherState: 'some other value'
   }
 
-  switchNameHandler = () => {
+  // Now passing a value 'newName' to this function:
+  switchNameHandler = (newName) => {
     console.log('Was clicked!');
     // This is a method which allows to update the state property. It takes an object as an argument:
     this.setState( {
       persons: [
-        { name: 'Bob', age: 28 },
+        { name: newName, age: 28 },
         { name: 'Sam', age: 29 },
         { name: 'Lila', age: 27 }
       ]
@@ -28,6 +29,18 @@ class App extends Component {
   }
   // setState will merge/overwrite the old state with the new one. It will leave otherState untouched.
 
+  // Adding a new handler to change the name using an event:
+  nameChangedHandler = (event) => {
+    this.setState( {
+      persons: [
+        { name: 'Max', age: 28 },
+        { name: event.target.value, age: 29 },
+        { name: 'Lila', age: 27 }
+      ]
+    } )
+  }
+
+  // Changes to pass the newName data using two different ways -> arrow function (inefficient) or bind (recommended):
   render() {
     return (
       <div className="App">
@@ -35,13 +48,17 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <button onClick={this.switchNameHandler}>Switch Name</button>
+        <button onClick={() => this.switchNameHandler('Bob')}>Switch Name</button>
         <Person 
         name={this.state.persons[0].name} 
         age={this.state.persons[0].age} />
         <Person 
         name={this.state.persons[1].name} 
-        age={this.state.persons[1].age} 
+        age={this.state.persons[1].age}
+        // Adding a new property 'click', passing 'switchNameHandler' as a reference:
+        click={this.switchNameHandler.bind(this, 'Bob!!!')} 
+        // Adding another property 'changed', passing 'nameChangeHandler' as a reference:
+        changed={this.nameChangedHandler}
         > Hobbies: Surfing</Person>
         <Person 
         name={this.state.persons[2].name} 

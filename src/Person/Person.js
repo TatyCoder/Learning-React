@@ -1,17 +1,19 @@
 // To import 'React':
 import React from 'react'; 
 
-// Using onClick to change a name when clicking the paragraph, I simply call props.click (property defined in App.js):
+// To import the styling, I need the file extension .css, I can only omit it for .js files:
+import './Person.css';
+
+// Styling this component, I simply assign the new css class to my div here:
 const person = (props) => {
     return (
-        <div>
+        <div className='Person'>
             <p onClick={props.click}>I'm {props.name} and I'm {props.age}</p>
             <p>{props.children}</p>
             <input type='text' onChange={props.changed} />
         </div>
     )
 }
-// Another way for changing the name is 'onChange', it will be fired whenever the value in this input changes.
 
 // To export the 'person' constant which holds the function:
 export default person;

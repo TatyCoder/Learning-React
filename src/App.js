@@ -40,15 +40,27 @@ class App extends Component {
     } )
   }
 
-  // Changes to pass the newName data using two different ways -> arrow function (inefficient) or bind (recommended):
+  // Using inline style:
   render() {
+    const style = {
+      backgroundColor: 'white',
+      font: 'inherit',
+      border: '1px solid lightblue',
+      margin: '16px auto',
+      padding: '8px',
+      cursor: 'pointer'
+    }
+
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <button onClick={() => this.switchNameHandler('Bob')}>Switch Name</button>
+        <button
+        // Adding a 'style' property, passing the const style as a reference:
+          style={style}
+          onClick={() => this.switchNameHandler('Bob')}>Switch Name</button>
         <Person 
         name={this.state.persons[0].name} 
         age={this.state.persons[0].age} />

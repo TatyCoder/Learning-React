@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person';
 
-// Adding an id:
 class App extends Component {
   state = {
     persons: [
@@ -12,44 +11,37 @@ class App extends Component {
       { id: 'i3', name: 'Lila', age: 27 }
     ],
     otherState: 'some other value',
-    showPersons: false  
-    // If it is false, I don't want to show the persons.
+    showPersons: false
   }
 
-  // I'm not calling this handler anymore from anywhere in my application:
-  // switchNameHandler = (newName) => {
-  //   console.log('Was clicked!');
-  //   this.setState( {
-  //     persons: [
-  //       { name: newName, age: 28 },
-  //       { name: 'Sam', age: 29 },
-  //       { name: 'Lila', age: 27 }
-  //     ]
-  //   } )
-  // }
-  
-  nameChangedHandler = (event) => {
-    this.setState( {
-      persons: [
-        { name: 'Max', age: 28 },
-        { name: event.target.value, age: 29 },
-        { name: 'Lila', age: 27 }
-      ]
-    } )
-  }
+  // Updating this handler to work with flexible lists:
+  nameChangedHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(p => {  // To update the state for the person to which the input belongs. 
+      return p.id === id;  // This returns true. 
+      // This function is executed for every element in the array.
+    });
 
-  // Adding this new handler:
-  deletePersonHandler = (personIndex) => {
-    // const persons = this.state.persons.slice();  // Slice without arguments copies the array and returns a new one.
+    const person = {  // Creating a new object to get the person which id returns true.
+      ...this.state.persons[personIndex]  // Using the spread operator to not manipulate the original object.
+    };
+
+    person.name = event.target.value;  // To update the person name and setting it to value.
+
     const persons = [...this.state.persons];  // To create a copy of persons array before manipulating it.
-    persons.splice(personIndex, 1);  // Then I create a new version of that persons array by splicing one element.
-    this.setState( {persons: persons} )  // Finally I call the updated array.
+    persons[personIndex] = person;  // To update the array at one position, here should now be the updated person.
+ 
+    this.setState( {persons: persons} )  // To set the state to the updated persons array.
+  }
+
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState( {persons: persons} )
   }
  
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
     this.setState( { showPersons: !doesShow } );  
-   // By adding ! it sets showPersons equal to what doesShow is not: if doesShow is true it will set showPersons to false.
   }
 
   render() {
@@ -64,17 +56,18 @@ class App extends Component {
 
     let persons = null;
 
-    // Now outputting this as a list, wrapping in {} all the content to render it dynamically:
     if (this.state.showPersons) {
-      persons = ( // map executes on every element of an array and returns an array that contains the results.
+      persons = ( 
         <div>  
           {this.state.persons.map((person, index) => {
             return <Person 
               click={() => this.deletePersonHandler(index)}
               name={person.name}
               age={person.age} 
-              key={person.id}  // The key property allows React to keep track of the individual elements.
-              />
+              key={person.id}
+              // Adding the changed property pointing to the handler which correctly updates the state:
+              changed={(event) => this.nameChangedHandler(event, person.id)}  
+            />
           })}
         </div>
       );

@@ -14,41 +14,41 @@ class App extends Component {
     showPersons: false
   }
 
-  // Updating this handler to work with flexible lists:
   nameChangedHandler = (event, id) => {
-    const personIndex = this.state.persons.findIndex(p => {  // To update the state for the person to which the input belongs. 
-      return p.id === id;  // This returns true. 
-      // This function is executed for every element in the array.
+    const personIndex = this.state.persons.findIndex(p => {   
+      return p.id === id; 
     });
 
-    const person = {  // Creating a new object to get the person which id returns true.
-      ...this.state.persons[personIndex]  // Using the spread operator to not manipulate the original object.
+    const person = {  
+      ...this.state.persons[personIndex]  
     };
 
-    person.name = event.target.value;  // To update the person name and setting it to value.
+    person.name = event.target.value;  
 
-    const persons = [...this.state.persons];  // To create a copy of persons array before manipulating it.
-    persons[personIndex] = person;  // To update the array at one position, here should now be the updated person.
+    const persons = [...this.state.persons];  
+    persons[personIndex] = person;  
  
-    this.setState( {persons: persons} )  // To set the state to the updated persons array.
+    this.setState({persons: persons});
   }
 
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
-    this.setState( {persons: persons} )
+    this.setState({persons: persons});
   }
  
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
-    this.setState( { showPersons: !doesShow } );  
+    this.setState({ showPersons: !doesShow });  
   }
 
+  // Setting styles dynamically, linked to the if statement:
   render() {
     const style = {
-      backgroundColor: 'white',
+      backgroundColor: 'lightblue',
+      color: 'white',
       font: 'inherit',
-      border: '1px solid lightblue',
+      border: '2px solid white',
       margin: '16px auto',
       padding: '8px',
       cursor: 'pointer'
@@ -65,12 +65,13 @@ class App extends Component {
               name={person.name}
               age={person.age} 
               key={person.id}
-              // Adding the changed property pointing to the handler which correctly updates the state:
               changed={(event) => this.nameChangedHandler(event, person.id)}  
             />
           })}
         </div>
       );
+      // When if is true persons can be seen and the backgroundColor will change:
+      style.backgroundColor = 'black';
     }
 
     return (

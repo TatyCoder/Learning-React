@@ -42,7 +42,6 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });  
   }
 
-  // Setting styles dynamically, linked to the if statement:
   render() {
     const style = {
       backgroundColor: 'lightblue',
@@ -70,16 +69,28 @@ class App extends Component {
           })}
         </div>
       );
-      // When if is true persons can be seen and the backgroundColor will change:
       style.backgroundColor = 'black';
     }
 
+    // Creating a new variable:
+    // let classes = ['aqua', 'bold'].join(' ');  // This will turn an array of strings into one string aqua bold.
+    // Adding a dynamic nature to that variable:
+    const classes = [];  // I can use const here because I'm never assigning a new value.
+    if (this.state.persons.length <= 2) {
+      classes.push('aqua');  // To push the aqua class onto this array --> classes = ['aqua'].
+    }  // Another if statement, not else:
+    if (this.state.persons.length <= 1) {
+      classes.push('bold');  // classes = ['aqua', 'bold'].
+    }
+
+    // Setting the class name of the paragraph dynamically depending on the length of the elements in person's array:
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+        <p className={classes.join(' ')}>This is really working!</p>
         <button
           style={style}
           onClick={this.togglePersonsHandler}>Toggle Persons</button>

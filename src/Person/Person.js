@@ -1,13 +1,19 @@
-// To import 'React':
 import React from 'react'; 
+// To import Radium:
+import Radium from 'radium';
 
-// To import the styling, I need the file extension .css, I can only omit it for .js files:
 import './Person.css';
 
-// Styling this component, I simply assign the new css class to my div here:
+// Adding a new const to use media queries from Radium:
 const person = (props) => {
+    const style = {
+        '@media (min-widht: 500px)': {
+            width: '450px'
+        }
+    }
+    // Assigning the style here, which will overwrite my class setting, by default css rules not because of Radium:
     return (
-        <div className='Person'>
+        <div className='Person' style={style}>
             <p onClick={props.click}>I'm {props.name} and I'm {props.age}</p>
             <p>{props.children}</p>
             <input type='text' onChange={props.changed} value={props.name} />
@@ -15,5 +21,5 @@ const person = (props) => {
     )
 }
 
-// To export the 'person' constant which holds the function:
-export default person;
+// // To call Radium as a function:
+export default Radium(person);

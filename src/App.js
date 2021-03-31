@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// To import Radium, in addition to StyleRoot which is a special component needed for media queries:
+import Radium, { StyleRoot} from 'radium';
 import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person';
@@ -42,6 +44,7 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });  
   }
 
+  // Using new features from Radium:
   render() {
     const style = {
       backgroundColor: 'lightblue',
@@ -50,7 +53,12 @@ class App extends Component {
       border: '2px solid white',
       margin: '16px auto',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      // Pseudo selector: it needs to be wrap in '' because it starts with : and that is not a valid javascript property name.
+      ':hover': {
+        backgroundColor: 'lavender',
+        color: 'black'
+      }
     }
 
     let persons = null;
@@ -69,23 +77,28 @@ class App extends Component {
           })}
         </div>
       );
+      // And I will also overwrite hover down here where I overwrite the background color:
       style.backgroundColor = 'black';
+      style[':hover'] = {
+        backgroundColor: 'grey',
+        color: 'black'
+      }
     }
 
-    // Creating a new variable:
-    // let classes = ['aqua', 'bold'].join(' ');  // This will turn an array of strings into one string aqua bold.
-    // Adding a dynamic nature to that variable:
-    const classes = [];  // I can use const here because I'm never assigning a new value.
+    // let classes = ['aqua', 'bold'].join(' ');
+    
+    const classes = []; 
     if (this.state.persons.length <= 2) {
-      classes.push('aqua');  // To push the aqua class onto this array --> classes = ['aqua'].
-    }  // Another if statement, not else:
+      classes.push('aqua');
+    } 
     if (this.state.persons.length <= 1) {
-      classes.push('bold');  // classes = ['aqua', 'bold'].
+      classes.push('bold');
     }
 
-    // Setting the class name of the paragraph dynamically depending on the length of the elements in person's array:
+    // Here I need to wrap the whole div with the className="App" into StyleRoot (this will wrap the entire app):
     return (
-      <div className="App">
+      <StyleRoot>
+        <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
@@ -96,8 +109,10 @@ class App extends Component {
           onClick={this.togglePersonsHandler}>Toggle Persons</button>
         {persons}
         </div>
+      </StyleRoot>  
     );
   }
 }
 
-export default App;
+// To call Radium as a function:
+export default Radium(App);  // This is called a higher order component.

@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
-// To import Radium, in addition to StyleRoot which is a special component needed for media queries:
-import Radium, { StyleRoot} from 'radium';
+// To import styled:
+import styled from 'styled-components';
+
 import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person';
+
+// Creating a new const where I copied all the style properties from const style (in regular css syntax) and using the new prop:
+const StyledButton = styled.button`
+  background-color: ${props => props.alt ? 'black' : 'lightblue'};
+  color: white;
+  font: inherit;
+  border: 2px solid white;
+  margin: 16px auto;
+  padding: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: ${props => props.alt ? 'grey' : 'lavender'};
+    color: black
+  }  
+`;
 
 class App extends Component {
   state = {
@@ -14,7 +31,7 @@ class App extends Component {
     ],
     otherState: 'some other value',
     showPersons: false
-  }
+  };
 
   nameChangedHandler = (event, id) => {
     const personIndex = this.state.persons.findIndex(p => {   
@@ -31,35 +48,34 @@ class App extends Component {
     persons[personIndex] = person;  
  
     this.setState({persons: persons});
-  }
+  };
 
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
-  }
+  };
  
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
     this.setState({ showPersons: !doesShow });  
-  }
+  };
 
-  // Using new features from Radium:
   render() {
-    const style = {
-      backgroundColor: 'lightblue',
-      color: 'white',
-      font: 'inherit',
-      border: '2px solid white',
-      margin: '16px auto',
-      padding: '8px',
-      cursor: 'pointer',
-      // Pseudo selector: it needs to be wrap in '' because it starts with : and that is not a valid javascript property name.
-      ':hover': {
-        backgroundColor: 'lavender',
-        color: 'black'
-      }
-    }
+    // I don't use this anymore:
+    // const style = {
+    //   backgroundColor: 'lightblue',
+    //   color: 'white',
+    //   font: 'inherit',
+    //   border: '2px solid white',
+    //   margin: '16px auto',
+    //   padding: '8px',
+    //   cursor: 'pointer',
+    //   ':hover': {
+    //     backgroundColor: 'lavender',
+    //     color: 'black'
+    //   }
+    // };
 
     let persons = null;
 
@@ -77,12 +93,12 @@ class App extends Component {
           })}
         </div>
       );
-      // And I will also overwrite hover down here where I overwrite the background color:
-      style.backgroundColor = 'black';
-      style[':hover'] = {
-        backgroundColor: 'grey',
-        color: 'black'
-      }
+      // I can't use this to change styles conditionally when using styled components:
+      // style.backgroundColor = 'black';
+      // style[':hover'] = {
+      //   backgroundColor: 'grey',
+      //   color: 'black'
+      // };
     }
 
     // let classes = ['aqua', 'bold'].join(' ');
@@ -95,24 +111,23 @@ class App extends Component {
       classes.push('bold');
     }
 
-    // Here I need to wrap the whole div with the className="App" into StyleRoot (this will wrap the entire app):
+    // Here I need to replace button with StyledButton and pass a new prop 'alt', I don't apply the inline style anymore:
     return (
-      <StyleRoot>
         <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className={classes.join(' ')}>This is really working!</p>
-        <button
-          style={style}
-          onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        <StyledButton
+          // style={style}
+          alt={this.state.showPersons}
+          onClick={this.togglePersonsHandler}>Toggle Persons
+        </StyledButton>
         {persons}
-        </div>
-      </StyleRoot>  
+        </div>  
     );
   }
 }
 
-// To call Radium as a function:
-export default Radium(App);  // This is called a higher order component.
+export default App;
